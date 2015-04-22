@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">DemoAndroidNotifications</string>
+    <string name="app_name">Demo - Android Notifications</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="default_time">00</string>
+    <string name="time_label">time(s)</string>
+    <string name="start_button">Start Countdown</string>
 </resources>
