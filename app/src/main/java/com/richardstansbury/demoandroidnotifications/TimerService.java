@@ -1,6 +1,9 @@
 /**
  * Implements a timer service that triggers an alert given a
  * target elapsed time.
+ *
+ * @author Richard S. Stansbury
+ * @date 22.April 2015
  */
 
 
@@ -20,10 +23,13 @@ import java.util.TimerTask;
 
 public class TimerService extends Service {
 
+    public static final int NOTIFIER_ID = 1;
+
     Timer timer;
 
 
     /**
+     * Starts the service.
      *
      * @param intent - calling intent
      * @param flags - flags
@@ -52,19 +58,26 @@ public class TimerService extends Service {
         return START_NOT_STICKY;
     }
 
+
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+
+    /**
+     * Sends a notification that the timer has expired.
+     * @param timeSec
+     */
     public void sendNotification(int timeSec)
     {
 
-
+        //Create action intent for when notification is clicked
         Intent actionIntent = new Intent(this, MainActivity.class);
         PendingIntent actionPendingIntent = PendingIntent.getActivity(this, 0, actionIntent,0);
 
+        //Creates a Notification Builder.
         NotificationCompat.Builder b = new NotificationCompat.Builder(this);
         b.setAutoCancel(true);
         b.setDefaults(Notification.DEFAULT_ALL);
@@ -74,9 +87,8 @@ public class TimerService extends Service {
         b.setSmallIcon(R.drawable.clock);
 
 
-        //Need to add an action intent
-
+        //Launch Notification
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.notify(1138, b.build());
+        manager.notify(NOTIFIER_ID, b.build());
     }
 }

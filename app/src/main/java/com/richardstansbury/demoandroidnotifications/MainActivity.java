@@ -1,3 +1,10 @@
+/*
+ *  @author Richard S. Stansbury
+ *  @project Demonstration of Android Notifications
+ *  @date 22.April.2015
+ *
+ */
+
 package com.richardstansbury.demoandroidnotifications;
 
 import android.app.Activity;
@@ -13,6 +20,10 @@ public class MainActivity extends Activity {
     EditText time_limit;
     boolean clickAvailable;
 
+    /**
+     * Creates a new activity.
+     * @param savedInstanceState - parameters passed to an activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +38,10 @@ public class MainActivity extends Activity {
         clickAvailable = true;
     }
 
+    /**
+     * Called prior to view being destroyed to preserve state.
+     * @param state - Bundle to save state into
+     */
     @Override
     public void onSaveInstanceState(Bundle state)
     {
@@ -34,18 +49,27 @@ public class MainActivity extends Activity {
         state.putInt("time_limit", Integer.parseInt(time_limit.getText().toString()));
     }
 
+
+    /**
+     * onClick listener for the activity's button.  Grabs the requested time.
+     * Starts the service.  Creates a countdown timer.
+     * @param v
+     */
     public void startTimer(View v) {
 
         if (!clickAvailable) return;
         clickAvailable = false;
 
+        //Get the time limit for the timer
         int limit = Integer.parseInt(time_limit.getText().toString());
 
+        //Create an intent to call the timer service.
         Intent timerIntent = new Intent(this, TimerService.class);
         timerIntent.putExtra("timeSec",limit);
         Log.i("Time Start", "Timer Started with " + limit + " limit");
         this.startService(timerIntent);
 
+        //Create countdown clock to update UI
         new CountDownTimer(limit * 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -53,12 +77,15 @@ public class MainActivity extends Activity {
             }
 
             public void onFinish() {
-                //Do nothing.  You really could launch your notification here, but I wanted to show a service.
+
                 time_limit.setText("0");
                 clickAvailable = true;
+
+                //This would be a perfect place to launch the notification; however I did it in a
+                //service for demonstration purpose.
             }
 
-        }.start();
+        }.start(); //start the timer.
 
     }
 
