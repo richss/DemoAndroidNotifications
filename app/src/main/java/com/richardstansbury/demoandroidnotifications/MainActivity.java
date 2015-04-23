@@ -81,8 +81,6 @@ public class MainActivity extends Activity {
                 time_limit.setText("0");
                 clickAvailable = true;
 
-                //This would be a perfect place to launch the notification; however I did it in a
-                //service for demonstration purpose.
                 sendNotification(limit);
             }
 
