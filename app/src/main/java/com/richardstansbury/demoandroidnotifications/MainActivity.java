@@ -8,9 +8,13 @@
 package com.richardstansbury.demoandroidnotifications;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,6 +23,8 @@ public class MainActivity extends Activity {
 
     EditText time_limit;
     boolean clickAvailable;
+
+    public static final int NOTIFIER_ID = 1;
 
     /**
      * Creates a new activity.
@@ -53,7 +59,7 @@ public class MainActivity extends Activity {
     /**
      * onClick listener for the activity's button.  Grabs the requested time.
      * Starts the service.  Creates a countdown timer.
-     * @param v
+     * @param v - view clicked.
      */
     public void startTimer(View v) {
 
@@ -61,7 +67,7 @@ public class MainActivity extends Activity {
         clickAvailable = false;
 
         //Get the time limit for the timer
-        int limit = Integer.parseInt(time_limit.getText().toString());
+        final int limit = Integer.parseInt(time_limit.getText().toString());
 
         //Create an intent to call the timer service.
         Intent timerIntent = new Intent(this, TimerService.class);
@@ -83,10 +89,38 @@ public class MainActivity extends Activity {
 
                 //This would be a perfect place to launch the notification; however I did it in a
                 //service for demonstration purpose.
+                sendNotification(limit);
             }
 
         }.start(); //start the timer.
 
+    }
+
+
+    /**
+     * Sends a notification that the timer has expired.
+     * @param timeSec
+     */
+    public void sendNotification(int timeSec)
+    {
+
+        //Create action intent for when notification is clicked
+        Intent actionIntent = new Intent(this, MainActivity.class);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(this, 0, actionIntent,0);
+
+        //Creates a Notification Builder.
+        NotificationCompat.Builder b = new NotificationCompat.Builder(this);
+        b.setAutoCancel(true);
+        b.setDefaults(Notification.DEFAULT_ALL);
+        b.setContentTitle("Timer Expired");
+        b.setContentText("Your timer for " + timeSec + " seconds has expired.");
+        b.setContentIntent(actionPendingIntent);
+        b.setSmallIcon(R.drawable.clock);
+
+
+        //Launch Notification
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        manager.notify(NOTIFIER_ID, b.build());
     }
 
 }
