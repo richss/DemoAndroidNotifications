@@ -69,12 +69,6 @@ public class MainActivity extends Activity {
         //Get the time limit for the timer
         final int limit = Integer.parseInt(time_limit.getText().toString());
 
-        //Create an intent to call the timer service.
-        Intent timerIntent = new Intent(this, TimerService.class);
-        timerIntent.putExtra("timeSec",limit);
-        Log.i("Time Start", "Timer Started with " + limit + " limit");
-        this.startService(timerIntent);
-
         //Create countdown clock to update UI
         new CountDownTimer(limit * 1000, 1000) {
 
